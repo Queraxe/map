@@ -11,7 +11,7 @@ function getCookieValue(name) {
 	return cookie ? cookie.split("=")[1] : null;
 }
 
-function setCookies(lo, la) {
+function setCookies(la, lo) {
 	const now = new Date();
 	const reset = new Date(
 		now.getFullYear(),
