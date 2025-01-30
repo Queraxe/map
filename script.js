@@ -1,6 +1,18 @@
-window.onload = function () {
-	main();
-};
+Swal.fire({
+    title: "Was suchst du?",
+    input: "text",
+    inputPlaceholder: "Suche nach...",
+    showCancelButton: true,
+    confirmButtonText: "OK",
+    cancelButtonText: "Abbrechen",
+}).then((result) => {
+    if (result.isConfirmed) {
+        input = result.value;
+        main();
+    } else if (result.isDismissed) {
+        Swal.fire("Du hast den Vorgang abgebrochen.");
+    }
+});
 
 function main() {
 	if (navigator.geolocation) {
@@ -9,20 +21,22 @@ function main() {
 	} else {
 		console.log("Geolocation is not supported by this browser.");
 	}
-
-	function runProgram(position) {
-		const latitude = position.coords.latitude;
-		const longitude = position.coords.longitude;
-
-		setCookies(latitude, longitude);
-
-		startMap(latitude, longitude);
-	}
 }
 
-async function startMap(latitude, longitude) {
+function runProgram(position) {
+	const latitude = position.coords.latitude;
+	const longitude = position.coords.longitude;
+
+	setCookies(latitude, longitude);
+
+	console.log(input);
+
+	startMap(latitude, longitude, input);
+}
+
+async function startMap(latitude, longitude, wort) {
 	// Funktionsaufruf aus der anderen JS-Datei
-	amenity = await find("shelter");
+	amenity = await find(wort);
 
 	console.log(`Coordinaten: ${latitude}, ${longitude}`);
 
@@ -87,7 +101,7 @@ function showError(error) {
 			break;
 		case error.POSITION_UNAVAILABLE:
 			console.log("Location information is unavailable.");
-			startMap(getCookieValue("latitude"), getCookieValue("longitude"));
+			startMap(getCookieValue("latitude"), getCookieValue("longitude"), input);
 			break;
 		case error.TIMEOUT:
 			console.log("The request to get user location timed out.");
