@@ -5,23 +5,17 @@ window.onload = function () {
 function main() {
 	if (navigator.geolocation) {
 		console.log("Geolocation is supported by this browser.");
-		try {
-			const position = navigator.geolocation.getCurrentPosition();
-			setCookies(position.coords.longitude, position.coords.latitude);
-			showPosition(position.coords.latitude, position.coords.longitude);
-		} catch (e) {
-			showPosition(
-				getCookieValue("latitude"),
-				getCookieValue("longitude")
-			);
-		}
+		navigator.geolocation.getCurrentPosition(showPosition, showError);
 	} else {
 		console.log("Geolocation is not supported by this browser.");
 	}
 
-	function showPosition(latitude, longitude) {
+	function showPosition(position) {
+		const latitude = position.coords.latitude;
+		const longitude = position.coords.longitude;
 
-		setCookies(longitude, latitude);
+
+        setCookies(longitude, latitude);
 
 		console.log(`Coordinaten: ${latitude}, ${longitude}`);
 
@@ -79,7 +73,7 @@ function main() {
 		fetchBenches(map, center.lat, center.lng, zoom);
 	}
 
-	/**function showError(error) {
+	function showError(error) {
 		switch (error.code) {
 			case error.PERMISSION_DENIED:
 				console.log("User denied the request for Geolocation.");
@@ -94,7 +88,7 @@ function main() {
 				console.log("An unknown error occurred.");
 				break;
 		}
-	}**/
+	}
 
 	function fetchBenches(map, lat, lon, zoom) {
 		let amenity = "bench";
