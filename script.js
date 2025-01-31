@@ -52,7 +52,8 @@ async function startMap(latitude, longitude) {
 
 async function set(wort, map) {
 	// Funktionsaufruf aus der anderen JS-Datei
-	let amenity = await find(wort);
+	//let amenity = await find(wort);
+	let amenity = await ask(`du kennst doch alle open street map amenitys oder? ich gebe dir jetzt einen begriff und du sollt mir genau einen amenity tag (englischer begriff) zurück geben. einfach nur das eine wort. los gehts: ${wort}`);
 
 	document.getElementById("search-input").value = amenity;
 
