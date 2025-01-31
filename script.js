@@ -1,19 +1,3 @@
-Swal.fire({
-    title: "Was suchst du?",
-    input: "text",
-    inputPlaceholder: "Suche nach...",
-    showCancelButton: true,
-    confirmButtonText: "OK",
-    cancelButtonText: "Abbrechen",
-}).then((result) => {
-    if (result.isConfirmed) {
-        input = result.value;
-        main();
-    } else if (result.isDismissed) {
-        Swal.fire("Du hast den Vorgang abgebrochen.");
-    }
-});
-
 function main() {
 	if (navigator.geolocation) {
 		console.log("Geolocation is supported by this browser.");
