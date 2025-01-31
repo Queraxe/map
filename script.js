@@ -1,3 +1,14 @@
+let input;
+let map;
+
+main();
+
+document.getElementById("search-button").addEventListener("click", function () {
+	input = document.getElementById("search-input").value;
+
+	set(input, map);
+});
+
 function main() {
 	if (navigator.geolocation) {
 		console.log("Geolocation is supported by this browser.");
@@ -13,19 +24,14 @@ function runProgram(position) {
 
 	setCookies(latitude, longitude);
 
-	console.log(input);
-
-	startMap(latitude, longitude, input);
+	startMap(latitude, longitude);
 }
 
-async function startMap(latitude, longitude, wort) {
-	// Funktionsaufruf aus der anderen JS-Datei
-	amenity = await find(wort);
-
+async function startMap(latitude, longitude) {
 	console.log(`Coordinaten: ${latitude}, ${longitude}`);
 
 	// Create a map centered at the user's location
-	const map = L.map("map").setView([latitude, longitude], 15);
+	map = L.map("map").setView([latitude, longitude], 15);
 
 	// Add OpenStreetMap tiles
 	L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -42,6 +48,13 @@ async function startMap(latitude, longitude, wort) {
 	})
 		.addTo(map)
 		.bindPopup("location");
+}
+
+async function set(wort, map) {
+	// Funktionsaufruf aus der anderen JS-Datei
+	let amenity = await find(wort);
+
+	document.getElementById("search-input").value = amenity;
 
 	// Fetch and display benches from OpenStreetMap using Overpass API
 	updateBenches(map, amenity);
@@ -54,6 +67,12 @@ async function startMap(latitude, longitude, wort) {
 	map.on("zoomend", function () {
 		updateBenches(map, amenity);
 	});
+
+	document
+		.getElementById("search-button")
+		.addEventListener("click", function () {
+			return;
+		});
 }
 
 function updateBenches(map, amenity) {
@@ -85,7 +104,11 @@ function showError(error) {
 			break;
 		case error.POSITION_UNAVAILABLE:
 			console.log("Location information is unavailable.");
-			startMap(getCookieValue("latitude"), getCookieValue("longitude"), input);
+			startMap(
+				getCookieValue("latitude"),
+				getCookieValue("longitude"),
+				input
+			);
 			break;
 		case error.TIMEOUT:
 			console.log("The request to get user location timed out.");
