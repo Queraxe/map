@@ -59,19 +59,21 @@ async function set(wort, map) {
 	// Fetch and display benches from OpenStreetMap using Overpass API
 	updateBenches(map, amenity);
 
+	function update(){
+		updateBenches(map, amenity);
+	}
+
 	// Update benches when the map is moved or zoomed
-	map.on("moveend", function () {
-		updateBenches(map, amenity);
-	});
+	map.on("moveend", update);
+	
 
-	map.on("zoomend", function () {
-		updateBenches(map, amenity);
-	});
+	map.on("zoomend", update);
 
-	document
+	return document
 		.getElementById("search-button")
 		.addEventListener("click", function () {
-			return;
+			map.off("moveend", update);
+			map.off("zoomend", update);
 		});
 }
 
